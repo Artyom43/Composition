@@ -2,9 +2,9 @@ package com.example.composition.presentation
 
 import android.app.Application
 import android.os.CountDownTimer
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.example.composition.R
 import com.example.composition.data.GameRepositoryImpl
 import com.example.composition.domain.entity.GameResult
@@ -14,10 +14,12 @@ import com.example.composition.domain.entity.Question
 import com.example.composition.domain.usecases.GenerateQuestionUseCase
 import com.example.composition.domain.usecases.GetGameSettingsUseCase
 
-class GameViewModel(application: Application) : AndroidViewModel(application) {
+class GameViewModel(
+    application: Application,
+    private val level: Level
+) : ViewModel() {
 
     private lateinit var gameSettings: GameSettings
-    private lateinit var level: Level
 
     private val repository = GameRepositoryImpl
     private val context = application
@@ -62,11 +64,8 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
 
     private var timer: CountDownTimer? = null
 
-    fun startGame(level: Level) {
-        getGameSettings(level)
-        updateProgress()
-        startTimer()
-        generateQuestion()
+    init {
+        startGame(level)
     }
 
     override fun onCleared() {
@@ -74,8 +73,15 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
         timer?.cancel()
     }
 
-    private fun getGameSettings(level: Level) {
-        this.level = level
+    private fun startGame(level: Level) {
+        getGameSettings()
+        updateProgress()
+        startTimer()
+        generateQuestion()
+    }
+
+
+    private fun getGameSettings() {
         gameSettings = getGameSettingsUseCase(level)
         _minPercent.value = gameSettings.minPercentOfRightAnswers
     }
