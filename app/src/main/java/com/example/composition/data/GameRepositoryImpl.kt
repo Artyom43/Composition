@@ -45,15 +45,15 @@ object GameRepositoryImpl: GameRepository {
             )
             Level.NORMAL -> GameSettings (
                 20,
-                20,
+                15,
                 80,
-                40
+                50
             )
             Level.HARD -> GameSettings (
                 30,
-                30,
+                20,
                 90,
-                40
+                45
             )
         }
     }
