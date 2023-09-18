@@ -49,31 +49,7 @@ class GameFinishedFragment : Fragment() {
     }
 
     private fun bindViews() {
-        with(binding) {
-            emojiResult.setImageResource(
-                if (gameResult.winner) {
-                    R.drawable.ic_smile
-                } else {
-                    R.drawable.ic_sad
-                }
-            )
-            tvRequiredAnswers.text = String.format(
-                getString(R.string.required_score),
-                gameResult.gameSettings.minCountOfRightAnswers.toString()
-            )
-            tvRequiredPercentage.text = String.format(
-                getString(R.string.required_percentage),
-                gameResult.gameSettings.minPercentOfRightAnswers.toString()
-            )
-            tvScoreAnswers.text = String.format(
-                getString(R.string.score_answers),
-                gameResult.countOfRightAnswers.toString()
-            )
-            tvScorePercentage.text = String.format(
-                getString(R.string.score_percentage),
-                gameResult.percentOfRightAnswers.toString()
-            )
-        }
+        binding.gameResult = gameResult
     }
 
     private fun retryGame() {
