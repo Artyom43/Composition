@@ -1,7 +1,5 @@
 package com.example.composition.presentation
 
-import android.content.res.ColorStateList
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -52,6 +50,8 @@ class GameFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = viewLifecycleOwner
         observeViewModel()
         setOptionsClickListeners()
     }
@@ -63,61 +63,16 @@ class GameFragment : Fragment() {
     }
 
     private fun setOptionsClickListeners() {
-        for (i in 0 until tvOptions.size) {
-            tvOptions[i].setOnClickListener {
-                viewModel.chooseAnswer(viewModel.question.value?.options!![i])
-            }
-        }
+//        for (i in 0 until tvOptions.size) {
+//            tvOptions[i].setOnClickListener {
+//                viewModel.chooseAnswer(viewModel.question.value?.options!![i])
+//            }
+//        }
     }
 
     private fun observeViewModel() {
-        with(viewModel) {
-            formattedTime.observe(viewLifecycleOwner) {
-                binding.tvTimer.text = it
-            }
-
-            question.observe(viewLifecycleOwner) { question ->
-                with(binding) {
-                    for (i in 0 until tvOptions.size) {
-                        tvOptions[i].text = question.options[i].toString()
-                    }
-
-                    tvLeftNumber.text = question.visibleNumber.toString()
-                    tvSum.text = question.sum.toString()
-                }
-            }
-
-            progressAnswers.observe(viewLifecycleOwner) {
-                binding.tvAnswersProgress.text = it
-            }
-
-            percentOfRightAnswers.observe(viewLifecycleOwner) {
-                binding.progressBar.setProgress(it, true)
-            }
-
-            enoughPercent.observe(viewLifecycleOwner) {
-                binding.progressBar.progressTintList = ColorStateList.valueOf(getColorByState(it))
-            }
-
-            enoughCount.observe(viewLifecycleOwner) {
-                binding.tvAnswersProgress.setTextColor(getColorByState(it))
-            }
-
-            gameResult.observe(viewLifecycleOwner) {
-                launchGameFishedFragment(it)
-            }
-
-            minPercent.observe(viewLifecycleOwner) {
-                binding.progressBar.secondaryProgress = it
-            }
-        }
-    }
-
-    private fun getColorByState(state: Boolean): Int {
-        return if (state) {
-            Color.GREEN
-        } else {
-            Color.RED
+        viewModel.gameResult.observe(viewLifecycleOwner) {
+            launchGameFishedFragment(it)
         }
     }
 
